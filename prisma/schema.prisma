@@ -10,20 +10,64 @@ datasource db {
 }
 
 model Product {
-    id          Int       @id @default(autoincrement())
+    id          Int     @id @default(autoincrement())
     name        String
-    description String
-    price       Decimal
-    image       String
-    category    Category? @relation(fields: [category_id], references: [id])
-    category_id Int
+    description String?
+    imageUrl    String?
 
-    @@index([category_id])
+    brand   Brand? @relation(fields: [brandId], references: [id])
+    brandId Int
+
+    bodyType   BodyType? @relation(fields: [bodyTypeId], references: [id])
+    bodyTypeId Int
+
+    EngineType   EngineType? @relation(fields: [engineTypeId], references: [id])
+    engineTypeId Int?
+
+    displacement      Float
+    mileage           Float
+    cylinders         Int
+    // maxPower          MaxPower @relation(fields: [maxPowerId], references: [id])
+    maxPower          String
+    maxTorque         String
+    frontBrake        String
+    rearBrake         String
+    fuelCapacity      Float
+    instrumentCluster String
+    // variations        Int[]
+    // colors            String[]
+    seatHeight        Float
+    groundClearance   Float
+    suspensionType    String
+    kerbWeight        Float
 }
 
-model Category {
-    id          Int       @id @default(autoincrement())
-    name        String
-    description String
-    products    Product[]
+// model MaxPower {
+//     id      Int       @id @default(autoincrement())
+//     value   String
+//     rpm     String
+//     Product Product[]
+// }
+
+// model InstrumentCluster {
+//     id   String @unique
+//     name String
+// }
+
+model Brand {
+    id       Int       @id @default(autoincrement())
+    name     String
+    products Product[]
+}
+
+model BodyType {
+    id      Int       @id @default(autoincrement())
+    name    String
+    Product Product[]
+}
+
+model EngineType {
+    id       Int       @id @default(autoincrement())
+    name     String
+    products Product[]
 }
