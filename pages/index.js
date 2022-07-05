@@ -1,29 +1,29 @@
-import Head from 'next/head';
-import Product from '../components/Product';
-import prisma from '../lib/prisma';
+import Head from "next/head";
+import prisma from "../lib/prisma";
+import ProductTable from "../components/ProductTable";
+import Header from "../components/Header";
+import DisplayCard from "../components/DisplayCard";
 
-export default function Home({ products }) {
+export default function Home(props) {
   return (
     <div>
       <Head>
-        <title>PlanetScale Next.js Quickstart</title>
-        <meta name="description" content="PlanetScale Quickstart for Next.js" />
+        <title>Wheelrs</title>
+        <meta name="description" content="Wheelrs" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="p-10 mx-auto max-w-4xl">
-        <h1 className="text-6xl font-bold mb-4 text-center">Next.js Starter</h1>
-        <p className="mb-20 text-xl text-center">
-          🔥 Shop from the hottest items in the world 🔥
-        </p>
-        <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 justify-items-center  gap-4">
-          {products.map((product) => (
-            <Product product={product} key={product.id} />
-          ))}
-        </div>
-      </main>
-
-      <footer></footer>
+      <Header />
+      <div className="grid gap-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2">
+        {props.products.map((product) => (
+          <DisplayCard
+            key={product.id}
+            imageUrl={product.imageUrl}
+            href={`/product/${product.id}`}
+            productName={product.name}
+          />
+        ))}
+      </div>
     </div>
   );
 }
@@ -31,16 +31,13 @@ export default function Home({ products }) {
 export async function getStaticProps(context) {
   const data = await prisma.product.findMany({
     include: {
-      category: true,
+      brand: true,
+      EngineType: true,
+      bodyType: true,
     },
   });
 
-  //convert decimal value to string to pass through as json
-  const products = data.map((product) => ({
-    ...product,
-    price: product.price.toString(),
-  }));
   return {
-    props: { products },
+    props: { products: data },
   };
 }
