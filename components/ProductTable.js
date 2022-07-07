@@ -1,6 +1,8 @@
 import cx from "classnames";
 import get from "lodash-es/get";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import SearchDropdown from "./SearchDropdown";
 
 const TitleCell = (props) => {
   return (
@@ -61,7 +63,8 @@ const rows = [
   },
 ];
 
-const ProductTable = ({ products, getOptions }) => {
+const ProductTable = ({ products }) => {
+  const router = useRouter();
   return (
     <table className="table-fixed border-separate">
       <tbody>
@@ -80,6 +83,21 @@ const ProductTable = ({ products, getOptions }) => {
               />
             </td>
           ))}
+          {products.length < 3 ? (
+            <td>
+              <SearchDropdown
+                placeholder="Search Product"
+                onSelect={(selectedId) => {
+                  const ids = new URLSearchParams({
+                    ids: products
+                      .map((product) => product.id)
+                      .concat(selectedId),
+                  });
+                  router.replace(`/compare?` + ids);
+                }}
+              />
+            </td>
+          ) : null}
         </tr>
         {rows.map((row) => (
           <tr key={row.field}>

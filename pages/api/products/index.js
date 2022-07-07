@@ -4,7 +4,7 @@ import prisma from "../../../lib/prisma.js";
 export default async function getProducts(req, res) {
   const ids = req.query.ids || "";
   const idArray = ids.split(",");
-  const searchByIds = idArray.map((id) => ({
+  const searchByIds = idArray.filter(Boolean).map((id) => ({
     id: Number(id),
   }));
 
@@ -12,16 +12,15 @@ export default async function getProducts(req, res) {
     ? [
         {
           name: {
-            contains: searchQuery,
+            contains: req.query.search,
           },
         },
       ]
     : [];
 
+  const conditions = [...searchByQuery, ...searchByIds];
   const data = await prisma.product.findMany({
-    where: {
-      OR: [...searchByQuery, ...searchByIds],
-    },
+    ...(conditions.length > 0 ? { where: { OR: conditions } } : {}),
     include: {
       brand: true,
       EngineType: true,

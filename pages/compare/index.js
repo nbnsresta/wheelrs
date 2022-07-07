@@ -1,6 +1,20 @@
+import { useEffect } from "react";
+
+import { useRouter } from "next/router";
 import ProductTable from "../../components/ProductTable";
 
-const Compare = ({ products }) => {
+const Compare = ({ products, ids }) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (ids.length !== products.length) {
+      // return;
+      router.replace(
+        "/compare?" +
+          new URLSearchParams({ ids: products.map((product) => product.id) })
+      );
+    }
+  }, [ids.length, products, router]);
   return (
     <div className="flex flex-col gap-4">
       <ProductTable products={products} />
@@ -22,7 +36,8 @@ export async function getServerSideProps(context) {
 
   return {
     props: {
-      products: products.filter(Boolean),
+      ids,
+      products,
     },
   };
 }

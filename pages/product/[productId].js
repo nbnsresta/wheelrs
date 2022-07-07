@@ -28,10 +28,12 @@ const ProductProfile = ({ productDetail }) => {
             quality={100}
             objectFit="cover"
           />
-          <div className="flex flex-col">
-            <h1 className="text-white text-3xl p-4">{productDetail.name}</h1>
+          <div className="flex flex-col items-start gap-4">
+            <h1 className="text-white text-3xl">{productDetail.name}</h1>
             <Link href={`/compare/?ids=${productDetail.id}`} passHref>
-              <a className="text-white">Compare</a>
+              <a className="text-black px-4 py-2 bg-white rounded-md">
+                Compare
+              </a>
             </Link>
           </div>
         </div>
