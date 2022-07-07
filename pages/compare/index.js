@@ -1,13 +1,8 @@
-import Header from "../../components/Header";
 import ProductTable from "../../components/ProductTable";
-import { getProduct } from "../api/products";
 
 const Compare = ({ products }) => {
-  console.log(products);
   return (
     <div className="flex flex-col gap-4">
-      <Header />
-
       <ProductTable products={products} />
     </div>
   );
@@ -19,14 +14,12 @@ export async function getServerSideProps(context) {
     .map((value) => Number(value))
     .filter((value) => !isNaN(value));
 
-  console.log(ids);
-  const products = await Promise.all(
-    ids.map(async (id) => {
-      return await getProduct(Number(id)).catch(() => null);
-    })
+  const response = await fetch(
+    "http://localhost:3000/api/products?ids=" + ids.join(",")
   );
 
-  console.log(products);
+  const products = await response.json();
+
   return {
     props: {
       products: products.filter(Boolean),

@@ -1,7 +1,6 @@
 import Image from "next/image";
-import Header from "../../components/Header";
+import Link from "next/link";
 import Product404 from "../../components/Product404";
-import { getProduct } from "../api/products";
 
 const Card = ({ title, description }) => {
   return (
@@ -19,7 +18,6 @@ const ProductProfile = ({ productDetail }) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <Header />
       <main className="flex flex-col p-4 gap-4">
         <div className="flex flex-col sm:flex-row p-4 gap-4 bg-black rounded-t-xl items-start">
           <Image
@@ -30,7 +28,12 @@ const ProductProfile = ({ productDetail }) => {
             quality={100}
             objectFit="cover"
           />
-          <h1 className="text-white text-3xl p-4">{productDetail.name}</h1>
+          <div className="flex flex-col">
+            <h1 className="text-white text-3xl p-4">{productDetail.name}</h1>
+            <Link href={`/compare/?ids=${productDetail.id}`} passHref>
+              <a className="text-white">Compare</a>
+            </Link>
+          </div>
         </div>
         <div className="grid gap-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2">
           <Card title="Brand" description={productDetail.brand.name} />
@@ -88,8 +91,8 @@ export async function getServerSideProps(context) {
       },
     };
 
-  const productDetail = await getProduct(id);
-
+  const response = await fetch(`http://localhost:3000/api/products/${id}`);
+  const productDetail = await response.json();
   return {
     props: { productDetail },
   };

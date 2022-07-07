@@ -1,7 +1,4 @@
 import Head from "next/head";
-import prisma from "../lib/prisma";
-import ProductTable from "../components/ProductTable";
-import Header from "../components/Header";
 import DisplayCard from "../components/DisplayCard";
 
 export default function Home(props) {
@@ -13,8 +10,7 @@ export default function Home(props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Header />
-      <div className="grid gap-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2">
+      <div className="grid gap-4 p-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2">
         {props.products.map((product) => (
           <DisplayCard
             key={product.id}
@@ -28,14 +24,9 @@ export default function Home(props) {
   );
 }
 
-export async function getStaticProps(context) {
-  const data = await prisma.product.findMany({
-    include: {
-      brand: true,
-      EngineType: true,
-      bodyType: true,
-    },
-  });
+export async function getServerSideProps() {
+  const response = await fetch(`http://localhost:3000/api/products`);
+  const data = await response.json();
 
   return {
     props: { products: data },
