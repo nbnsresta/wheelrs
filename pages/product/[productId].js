@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { queryProductById } from "../../query";
 import Product404 from "../../components/Product404";
 
 const Card = ({ title, description }) => {
@@ -93,8 +94,7 @@ export async function getServerSideProps(context) {
       },
     };
 
-  const response = await fetch(`http://localhost:3000/api/products/${id}`);
-  const productDetail = await response.json();
+  const productDetail = await queryProductById(id);
   return {
     props: { productDetail },
   };

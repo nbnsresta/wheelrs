@@ -1,7 +1,7 @@
 import AsyncSelect from "react-select/async";
 
 const loadOptions = (search, callback) => {
-  fetch("http://localhost:3000/api/products?search=" + search)
+  fetch("/api/products?search=" + search)
     .then((response) => response.json())
     .then((products) => {
       return products.map((product) => ({

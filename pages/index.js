@@ -1,5 +1,6 @@
 import Head from "next/head";
 import DisplayCard from "../components/DisplayCard";
+import { queryProducts, queryProductsLookup } from "../query";
 
 export default function Home(props) {
   return (
@@ -25,10 +26,9 @@ export default function Home(props) {
 }
 
 export async function getServerSideProps() {
-  const response = await fetch(`http://localhost:3000/api/products`);
-  const data = await response.json();
+  const products = await queryProducts();
 
   return {
-    props: { products: data },
+    props: { products },
   };
 }
