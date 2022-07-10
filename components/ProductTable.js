@@ -33,7 +33,11 @@ const rows = [
     label: "Displacement",
     formatter: (value) => `${value} cc`,
   },
-  { field: "mileage", label: "Mileage", formatter: (value) => `${value} kmpl` },
+  {
+    field: "mileage",
+    label: "Mileage",
+    formatter: (value) => (value ? `${value} kmpl` : "-"),
+  },
   {
     field: "fuelCapacity",
     label: "Fuel Capacity",
@@ -93,7 +97,7 @@ const ProductTable = ({ products }) => {
                       .map((product) => product.id)
                       .concat(selectedId),
                   });
-                  router.replace(`/compare?` + ids);
+                  router.push(`/compare?` + ids);
                 }}
               />
             </td>
